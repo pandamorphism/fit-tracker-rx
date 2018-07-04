@@ -4,15 +4,23 @@ import {CurrentTrainingComponent} from './current-training/current-training.comp
 import {NewTrainingComponent} from './new-training/new-training.component';
 import {PastTrainingsComponent} from './past-trainings/past-trainings.component';
 import {TrainingComponent} from './training.component';
+import {MaterialModule} from '../material/material.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {StopTrainingComponent} from './current-training/stop-training/stop-training.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule,
+    FlexLayoutModule
   ],
-  declarations: [TrainingComponent,
+  declarations: [
+    TrainingComponent,
     CurrentTrainingComponent,
     NewTrainingComponent,
-    PastTrainingsComponent],
+    PastTrainingsComponent,
+    StopTrainingComponent],
+  entryComponents: [StopTrainingComponent],
   exports: [
     TrainingComponent,
     CurrentTrainingComponent,
