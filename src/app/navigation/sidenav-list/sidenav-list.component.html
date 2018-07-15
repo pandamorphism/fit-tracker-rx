@@ -1,20 +1,24 @@
 <mat-nav-list>
-  <a mat-list-item routerLink="/signup" (click)="linkClicked.emit()">
-    <mat-icon>face</mat-icon>
-    <span class="nav-caption">Signup</span>
-  </a>
-  <a mat-list-item routerLink="/login" (click)="linkClicked.emit()">
-    <mat-icon>input</mat-icon>
-    <span class="nav-caption">Login</span>
-  </a>
-  <a mat-list-item routerLink="/training" (click)="linkClicked.emit()">
-    <mat-icon>fitness_center</mat-icon>
-    <span class="nav-caption">Training</span>
-  </a>
-  <mat-list-item>
-    <button mat-icon-button (click)="linkClicked.emit()">
-      <mat-icon>eject</mat-icon>
-      <span class="nav-caption">Logout</span>
-    </button>
-  </mat-list-item>
+  <ng-container *ngIf="(authService.auth$ | async) === null; else loggedInSection">
+    <a mat-list-item routerLink="/signup" (click)="linkClicked.emit()">
+      <mat-icon>face</mat-icon>
+      <span class="nav-caption">Signup</span>
+    </a>
+    <a mat-list-item routerLink="/login" (click)="linkClicked.emit()">
+      <mat-icon>input</mat-icon>
+      <span class="nav-caption">Login</span>
+    </a>
+  </ng-container>
+  <ng-template #loggedInSection>
+    <a mat-list-item routerLink="/training" (click)="linkClicked.emit()">
+      <mat-icon>fitness_center</mat-icon>
+      <span class="nav-caption">Training</span>
+    </a>
+    <mat-list-item>
+      <button mat-icon-button (click)="authService.logOut() || linkClicked.emit()">
+        <mat-icon>eject</mat-icon>
+        <span class="nav-caption">Logout</span>
+      </button>
+    </mat-list-item>
+  </ng-template>
 </mat-nav-list>
