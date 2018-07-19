@@ -1,11 +1,6 @@
 import {interval, NEVER, Observable} from 'rxjs';
 import {filter, startWith, switchMap, tap} from 'rxjs/operators';
 
-export const debugObs = tag => ({
-  next: val => console.log('nexting %O ---> %O', tag, val),
-  error: error => console.error(error),
-  complete: () => console.log('%O completed!', tag)
-});
 export type TimerCommand = 'pause' | 'resume' | 'reset';
 export const resumableInterval: (period: number, seed?: number) => (commands$: Observable<TimerCommand>) => Observable<number> =
   (period, seed = 0) => commands$ => Observable.create(observer => {

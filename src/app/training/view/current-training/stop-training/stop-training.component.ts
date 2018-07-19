@@ -7,7 +7,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
   template: `
     <h1 mat-dialog-title>Are you sure?</h1>
     <mat-dialog-content>
-      <p>You already got {{(passedData.progress$ | async) || 0}}%</p>
+      <p>You already got {{(passedData.progress$ | async | floor) || 0}}%</p>
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button [mat-dialog-close]="true">Yes</button>
@@ -16,8 +16,6 @@ import {MAT_DIALOG_DATA} from '@angular/material';
   `,
 })
 export class StopTrainingComponent implements OnInit {
-  progress$: Observable<number>;
-
   constructor(@Inject(MAT_DIALOG_DATA) public passedData: { progress$: Observable<number> }) {
   }
 

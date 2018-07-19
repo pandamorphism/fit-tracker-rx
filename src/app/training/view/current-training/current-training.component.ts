@@ -1,12 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {map, shareReplay, takeUntil, takeWhile, tap} from 'rxjs/operators';
-import {resumableInterval, TimerCommand} from '../../shared/resumable.interval.observable';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {merge, Observable, Subject} from 'rxjs';
+import {map, shareReplay, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {resumableInterval, TimerCommand} from '../../../shared/resumable.interval.observable';
 import {MatDialog} from '@angular/material';
 import {StopTrainingComponent} from './stop-training/stop-training.component';
+import {TrainingService} from '../../service/training.service';
+import {tag} from 'rxjs-spy/operators';
 
 export const multiplier: (mult: number) => (val: number) => number = mult => num => num * mult;
-export const lte: (comparable: number) => (val: number) => boolean = comparable => val => val <= comparable;
 
 @Component({
   selector: 'app-current-training',
@@ -14,21 +15,23 @@ export const lte: (comparable: number) => (val: number) => boolean = comparable 
   styleUrls: ['./current-training.component.css']
 })
 export class CurrentTrainingComponent implements OnInit, OnDestroy {
-  @Output() trainingExit = new EventEmitter<void>();
   progress$: Observable<number>;
   destroyed$: Subject<void> = new Subject();
+  completed$: Subject<void> = new Subject();
   timerCommands$: Subject<TimerCommand> = new Subject();
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, public trainingService: TrainingService) {
 
   }
 
   ngOnInit() {
     this.progress$ = resumableInterval(1000, 1)(this.timerCommands$.asObservable()).pipe(
-      map(multiplier(5)),
-      takeWhile(lte(100)),
-      takeUntil(this.destroyed$),
-      shareReplay(),
+      withLatestFrom(this.trainingService.runningExercise$),
+      map(([tick, exerciseInfo]) => multiplier(100 / exerciseInfo.duration)(tick)),
+      tag('progress'),
+      takeUntil(merge(this.destroyed$, this.completed$)),
+      tap(percent => percent > 100 && this.onComplete()),
+      shareReplay(1),
     );
   }
 
@@ -41,7 +44,7 @@ export class CurrentTrainingComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().pipe(
-      tap(giveUp => giveUp && this.trainingExit.emit() || this.timerCommands$.next('resume'))
+      tap(giveUp => giveUp && this.trainingService.exitExercise() || this.timerCommands$.next('resume'))
     ).subscribe();
   }
 
@@ -49,5 +52,10 @@ export class CurrentTrainingComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
     this.timerCommands$.complete();
+  }
+
+  private onComplete() {
+    this.completed$.next();
+    this.trainingService.completeExercise();
   }
 }
