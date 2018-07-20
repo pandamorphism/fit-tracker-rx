@@ -4,6 +4,14 @@ export interface Exercise {
   duration: number;
   calories: number;
   date?: Date;
-  state?: 'completed' | 'cancelled' | null;
-  kind: 'exercise';
+  remainingProgress?: number;
+}
+
+export interface ActionedExercise extends Exercise {
+  actionTime: number;
+}
+
+export interface ExerciseActionResult {
+  type: 'completed' | 'cancelled';
+  progress?: number;
 }

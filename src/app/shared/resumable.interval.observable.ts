@@ -10,12 +10,12 @@ export const resumableInterval: (period: number, seed?: number) => (commands$: O
     const pauseResumeSubscription = source$.pipe(
       filter(command => command === 'pause' || command === 'resume'),
       switchMap(command => command === 'pause' ? NEVER : interval$),
-      tap(_ => observer.next(counter++))
+      tap(_ => observer.next(counter++)),
     ).subscribe();
     const resetSub = source$.pipe(
       filter(command => command === 'reset'),
       tap(_ => counter = 0),
-      tap(_ => observer.next(counter++))
+      tap(_ => observer.next(counter++)),
     ).subscribe();
     return () => {
       pauseResumeSubscription.unsubscribe();
