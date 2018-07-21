@@ -1,6 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SidenavListComponent } from './sidenav-list.component';
+import {SidenavListComponent} from './sidenav-list.component';
+import {MaterialModule} from '../../material/material.module';
+import {AuthService} from '../../auth/service/auth.service';
+import {RouterModule} from '@angular/router';
+import {APP_BASE_HREF} from '@angular/common';
 
 describe('SidenavListComponent', () => {
   let component: SidenavListComponent;
@@ -8,9 +12,11 @@ describe('SidenavListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidenavListComponent ]
+      imports: [MaterialModule, RouterModule.forRoot([])],
+      providers: [AuthService, {provide: APP_BASE_HREF, useValue: '/'}],
+      declarations: [SidenavListComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

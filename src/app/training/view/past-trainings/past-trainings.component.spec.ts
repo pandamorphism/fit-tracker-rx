@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PastTrainingsComponent } from './past-trainings.component';
+import {PastTrainingsComponent} from './past-trainings.component';
+import {MaterialModule} from '../../../material/material.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('PastTrainingsComponent', () => {
   let component: PastTrainingsComponent;
@@ -8,9 +10,10 @@ describe('PastTrainingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PastTrainingsComponent ]
+      imports: [BrowserAnimationsModule, MaterialModule],
+      declarations: [PastTrainingsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
