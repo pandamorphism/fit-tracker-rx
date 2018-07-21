@@ -15,18 +15,13 @@ export class TrainingService {
     {id: 'burpees', name: 'Burepees', duration: 60, calories: 8},
   ];
   private runningExercise: Subject<Exercise> = new Subject();
-  private completedExercises: Subject<ActionedExercise> = new Subject();
-  private cancelledExercises: Subject<ActionedExercise> = new Subject();
-  completedExercises$ = this.completedExercises.asObservable().pipe(
+  private completedOrCancelledExercises: Subject<ActionedExercise> = new Subject();
+
+  completedOrCancelledExercises$: Observable<ActionedExercise[]> = this.completedOrCancelledExercises.asObservable().pipe(
     scan((acc, current) => [...acc, current], []),
-    tag('completedEx')
-  )
-    .subscribe();
-  cancelledExercises$ = this.cancelledExercises.asObservable().pipe(
-    scan((acc, current) => [...acc, current], []),
-    tag('cancelledEx')
-  )
-    .subscribe();
+    tag('completedEx'),
+    shareReplay(1)
+  );
 
   runningExercise$: Observable<Exercise> = this.runningExercise.asObservable().pipe(
     tag('runningExercise'),
@@ -36,15 +31,22 @@ export class TrainingService {
   exerciseResult$: Subject<ExerciseActionResult> = new Subject();
 
   constructor() {
+    this.completedOrCancelledExercises$.subscribe();
     this.exerciseResult$.pipe(
       withLatestFrom(this.runningExercise),
       tap(([result, exercise]) => {
         switch (result.type) {
           case 'completed' :
-            this.completedExercises.next({...exercise, actionTime: Date.now()});
+            this.completedOrCancelledExercises.next({...exercise, actionTime: Date.now(), state: 'completed'});
             break;
           case 'cancelled' :
-            this.cancelledExercises.next({...exercise, remainingProgress: 100 - result.progress, actionTime: Date.now()});
+            this.completedOrCancelledExercises.next({
+              ...exercise,
+              calories: Math.floor(exercise.calories / 100 * result.progress),
+              remainingProgress: Math.round(100 - result.progress),
+              actionTime: Date.now(),
+              state: 'cancelled'
+            });
             break;
         }
       }),

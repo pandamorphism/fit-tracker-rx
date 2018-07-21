@@ -4,11 +4,12 @@ export interface Exercise {
   duration: number;
   calories: number;
   date?: Date;
-  remainingProgress?: number;
 }
 
 export interface ActionedExercise extends Exercise {
   actionTime: number;
+  state: 'completed' | 'cancelled';
+  remainingProgress?: number;
 }
 
 export interface ExerciseActionResult {
