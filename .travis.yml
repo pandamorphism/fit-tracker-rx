@@ -11,14 +11,16 @@ branches:
 cache:
   directories:
   - node_modules
-
+install:
+- npm install -g angular-cli-ghpages
 
 script:
-- npm run build --base-href https://pandamorphism.github.io/fit-tracker-rx/
+- npm run build-ghpages
+
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  local_dir: dist/fit-tracker-rx
+  local_dir: dist-ghpages
   on:
     branch: master
