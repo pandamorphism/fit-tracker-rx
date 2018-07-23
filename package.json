@@ -7,6 +7,7 @@
     "build": "ng build",
     "build-ghpages": "ng build --base-href \"https://pandamorphism.github.io/fit-tracker-rx/\" --output-path \"dist-ghpages\"",
     "test": "ng test",
+    "test:singleRun": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
