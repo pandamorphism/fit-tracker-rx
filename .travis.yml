@@ -23,6 +23,7 @@ before_install:
 - sudo dpkg -i google-chrome*.deb
 
 install:
+- npm install
 - npm install -g angular-cli-ghpages
 
 script:
