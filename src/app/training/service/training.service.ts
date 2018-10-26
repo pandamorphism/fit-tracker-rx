@@ -18,7 +18,7 @@ export class TrainingService {
   private completedOrCancelledExercises: Subject<ActionedExercise> = new Subject();
 
   completedOrCancelledExercises$: Observable<ActionedExercise[]> = this.completedOrCancelledExercises.asObservable().pipe(
-    scan((acc, current) => [...acc, current], []),
+    scan((acc, current: ActionedExercise) => [...acc, current], []),
     tag('completedEx'),
     shareReplay(1)
   );

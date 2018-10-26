@@ -44,7 +44,13 @@ export class CurrentTrainingComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().pipe(
-      tap(giveUp => giveUp && this.trainingService.exitExercise(this.progress$) || this.timerCommands$.next('resume'))
+      tap(giveUp => {
+        if (giveUp) {
+          this.trainingService.exitExercise(this.progress$);
+        } else {
+          this.timerCommands$.next('resume');
+        }
+      })
     ).subscribe();
   }
 
