@@ -33,4 +33,7 @@ export class PastTrainingsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  doFilter(value: any) {
+    console.log('filtering... %O', value);
+  }
 }
