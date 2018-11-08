@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import {TrainingService} from '../../service/training.service';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {tap} from 'rxjs/operators';
 import {ActionedExercise} from '../../model/exercise';
 import {Subscription} from 'rxjs';
@@ -12,6 +12,7 @@ import {Subscription} from 'rxjs';
 })
 export class PastTrainingsComponent implements AfterViewInit, OnDestroy {
   @ViewChild(MatSort) sorting: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource = new MatTableDataSource<ActionedExercise>();
   displayedColumns = ['actionTime', 'name', 'calories', 'duration', 'remainingProgress', 'state'];
   dataSourceSubscription: Subscription;
@@ -25,6 +26,7 @@ export class PastTrainingsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sorting;
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnDestroy(): void {
@@ -33,7 +35,7 @@ export class PastTrainingsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  doFilter(value: any) {
-    console.log('filtering... %O', value);
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 }
