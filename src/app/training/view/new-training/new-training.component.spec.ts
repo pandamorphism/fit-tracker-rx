@@ -3,6 +3,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {NewTrainingComponent} from './new-training.component';
 import {MaterialModule} from '../../../material/material.module';
 import {FormsModule} from '@angular/forms';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestoreStub} from '../../../test-utils';
 
 describe('NewTrainingComponent', () => {
   let component: NewTrainingComponent;
@@ -11,7 +13,10 @@ describe('NewTrainingComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MaterialModule, FormsModule],
-      declarations: [NewTrainingComponent]
+      providers: [{
+        provide: AngularFirestore, useValue: AngularFirestoreStub
+      }],
+      declarations: [NewTrainingComponent],
     })
       .compileComponents();
   }));

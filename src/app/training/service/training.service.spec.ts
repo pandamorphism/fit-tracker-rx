@@ -1,11 +1,16 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { TrainingService } from './training.service';
+import {TrainingService} from './training.service';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestoreStub} from '../../test-utils';
 
 describe('TrainingService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TrainingService]
+      providers: [
+        TrainingService,
+        {provide: AngularFirestore, useValue: AngularFirestoreStub}
+      ]
     });
   });
 
