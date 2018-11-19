@@ -1,40 +1,35 @@
 language: node_js
 node_js:
-- "9"
+  - '9'
 dist: trusty
 sudo: false
-
 branches:
   only:
-  - master
-  - /^greenkeeper/.*$/
-
+    - master
+    - "/^greenkeeper/.*$/"
 cache:
   directories:
-  - node_modules
-
+    - node_modules
 before_install:
-- export CHROME_BIN=/usr/bin/google-chrome
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- sudo apt-get update
-- sudo apt-get install -y libappindicator1 fonts-liberation
-- wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-- sudo dpkg -i google-chrome*.deb
-
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sudo apt-get update
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
 install:
-- npm install
-- npm install -g angular-cli-ghpages
-
+  - npm install
 script:
-- npm run lint
-- npm run test:singleRun
-- npm run build-ghpages
-
+  - npm run lint
+  - npm run test:singleRun
+  - npm run build:prod
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: dist-ghpages
-  on:
-    branch: master
+  provider: firebase
+  token:
+    secure: "PtU+FjmV+TGy3v0UKzgEtkO+a/Crzo2ZON/srS4PVuGRUNlRWk+xCfbSmr4W0FzbMJhyVb3DbjFz/wGp3xDeSEFLgdL6mvwPV1afORn0FpId5MKHsV6F/ENW9IoCrBeB5lQyHmRGVboYfQGWRyFvgXp8D27vpYQUJtcFYhiYT7guL03Eg6tAdrbLlaeuh73+gLwceaC7tZxEOzhQc/kQUP8sswrtWAIX
+    YK0OA1Xx9JoLGwph+UcFwiz6TVpKSoyHKZ+1vOLatvtde7uQ7daEyV7oqvViE78+wC1rTR6d+KKiddrzUCVCK+/nM97rdW2onHzxyQ5ULWzQKZiympBgSDc6uWlfd65fqiKac/XhlL52or6cUD/R8ClrMvI/fxBBUQIzDLi3GlkEJE94ZByB36JR89gRQ88ljUZj0c8JdZAGA31svQqsrT6pycaLYrPkQt5QeLajKR6
+    UmivdXNDTd91Zmb8GIAKvkTb696yByKnwdG/uRstw36IxDVnH7y6JczEkqi+TfimqGAynPPoaeJfnd30Eh4us4FBNrL+u9urLyzyIVC1lfYPhLWG6Gv0Y7HmanajrPiDctrADu6YTqzyGkTVj0+D9uBnNIyjLCwFmRw7jPquQhcRJe8PDuBG3FHCsMqZMf40owVb/3Z9Nybq2NhwoyCPGEKf+VupVAXo="
+env:
+  global:
+    secure: FMy7csczjSHq9DkGYFOXS42+7TfvBQsUKm6joKUAI/o88izkhbnwBXBOPFiePfFkST8/p440Sfq8+IAlWFSxFZL/YqAsgHH8IlFbObe8h0kErVmsgq5v8beWLBYQbWsX31L08dBd2otEEn4rMGX36O8Nwe0zcaTFVauB84k4oi4/QQcJcebejKOvORF4Yo+6DSj2a1ZA6eMqmsfn2fxeOy8qI4jhzyznJUnKnLRcawYJVK+iW+5KOYM+RCeUBwQe6WQWx7lZKDE1/YPoeQvj0GleqaD1knGqWMH/BOyMONsuEwmL7e8JdeydqVAT5RES2KqaIvrZKaGrli9pO7C5Tt4OxnKoCxwxeo0N51bvtGwbR84gYvFVmvMZvjAEoq8Qf1NeGpBBn61cLgMpG06h2VLnbJP4Gwt8lRxJcfSk58fxGsg771btINa8J4ZeJHWzzhk0OhI3JjO/g2wFGjugmEV9CD7xA50ZLGvzZKj9MJhLqW/f4+ec/Rj5Ahbsgen1UI0qziqXOUKWERoH1ORn8g4AOduKCRxhk023F4RBmz3Bv16dZxEX9rPofm2M7kGF2RJ6QzYX7xLm2ITz17ChPbTvXL29kQUcNccP00YavrS0UPZrPdvTi65loU8ehZ5jGKL2GhtDtF+wlI/1dA+9jfoeLjZCmnLmSGL8k1BUcro=

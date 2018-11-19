@@ -4,7 +4,7 @@
       <mat-card-title fxLayoutAlign="center">Time to start a workout!</mat-card-title>
       <mat-card-content fxLayoutAlign="center">
         <mat-select placeholder="Select type of trainings" ngModel name="exercise" required>
-          <mat-option *ngFor="let exercise of trainingService.availableExercises | async" value="{{exercise.id}}">{{exercise.name}}</mat-option>
+          <mat-option *ngFor="let exercise of trainingService.availableExercises$ | async" value="{{exercise.name}}">{{exercise.name}}</mat-option>
         </mat-select>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">

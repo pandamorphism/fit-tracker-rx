@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --port=1111",
     "build": "ng build",
+    "build:prod": "ng build --prod",
     "build-ghpages": "ng build --prod --base-href \"https://pandamorphism.github.io/fit-tracker-rx/\" --output-path \"dist-ghpages\"",
     "test": "ng test",
     "test:singleRun": "ng test --watch=false",

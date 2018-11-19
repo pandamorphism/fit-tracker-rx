@@ -1,20 +1,17 @@
 import {Injectable} from '@angular/core';
 import {ActionedExercise, Exercise, ExerciseActionResult} from '../model/exercise';
-import {Observable, of, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {tag} from 'rxjs-spy/operators';
-import {first, scan, shareReplay, tap, withLatestFrom} from 'rxjs/operators';
+import {first, map, scan, shareReplay, tap, withLatestFrom} from 'rxjs/operators';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
-  private _availableExercises: Exercise[] = [
-    {id: 'crunches', name: 'Crunches', duration: 30, calories: 8},
-    {id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15},
-    {id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18},
-    {id: 'burpees', name: 'Burepees', duration: 60, calories: 8},
-  ];
+  private _availableExercises$: Observable<Exercise[]>;
   private runningExercise: Subject<Exercise> = new Subject();
+  private selectExercise$: Subject<string> = new Subject();
   private completedOrCancelledExercises: Subject<ActionedExercise> = new Subject();
 
   completedOrCancelledExercises$: Observable<ActionedExercise[]> = this.completedOrCancelledExercises.asObservable().pipe(
@@ -30,7 +27,10 @@ export class TrainingService {
 
   exerciseResult$: Subject<ExerciseActionResult> = new Subject();
 
-  constructor() {
+  constructor(private db: AngularFirestore) {
+    this._availableExercises$ = this.db.collection<Exercise>('availableExercises').valueChanges().pipe(
+      shareReplay(1)
+    );
     this.completedOrCancelledExercises$.subscribe();
     this.exerciseResult$.pipe(
       withLatestFrom(this.runningExercise),
@@ -52,10 +52,16 @@ export class TrainingService {
       }),
       tap(() => this.runningExercise.next(null))
     ).subscribe();
+
+    this.selectExercise$.pipe(
+      withLatestFrom(this.availableExercises$),
+      map(([id, exercises]) => exercises.find(exercise => exercise.name === id)),
+      tap(exercise => this.runningExercise.next(exercise))
+    ).subscribe();
   }
 
   startExercise(exId: string) {
-    this.runningExercise.next(this._availableExercises.find(exercise => exercise.id === exId));
+    this.selectExercise$.next(exId);
   }
 
   exitExercise(progress$: Observable<number>) {
@@ -69,7 +75,7 @@ export class TrainingService {
     this.exerciseResult$.next({type: 'completed'});
   }
 
-  get availableExercises(): Observable<Exercise[]> {
-    return of([...this._availableExercises]);
+  get availableExercises$(): Observable<Exercise[]> {
+    return this._availableExercises$;
   }
 }

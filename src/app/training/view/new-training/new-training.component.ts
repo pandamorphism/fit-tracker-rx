@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {TrainingService} from '../../service/training.service';
-import {Exercise} from '../../model/exercise';
 import {NgForm} from '@angular/forms';
 
 @Component({
