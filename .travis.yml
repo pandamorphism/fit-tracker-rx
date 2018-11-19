@@ -22,7 +22,6 @@ install:
   - npm install
 script:
   - npm run lint
-  - npm run test:singleRun
   - npm run build:prod
 deploy:
   provider: firebase
